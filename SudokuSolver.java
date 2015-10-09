@@ -23,6 +23,7 @@ public class SudokuSolver
    Row_Col isSafe(int x[][], int row, int col)//If value of x[row][col] is not existing in full row and col then SAFE
    {
        Row_Col ans= Row_Col.SAFE;
+       
        int check = x[row][col];//row=6 ; col = 4
        
              for (int i = 0; i < 9 ; i++) //for Row
@@ -43,7 +44,7 @@ public class SudokuSolver
         return ans;
     }
    
-   Status verify_3x3Matrix(int x[][], int row, int col)
+   Status verify_3x3Matrix(int x[][], int row, int col)//TO verify number is valid for internal 3x3 Matrix
    {
        int check = x[row][col];//row = 6 ; col = 4
        
