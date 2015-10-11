@@ -32,7 +32,8 @@ public class SudokuSolver
     puzzle = new int[9][9]; //memory allocation
     puzzle = p;
     for(int i=0;i < 9;i++)
-    System.out.println(data[i]);
+    System.out.print(data[i]+" ");
+    System.out.println("\n");
 }
   
 
@@ -41,22 +42,27 @@ public class SudokuSolver
        Row_Col ans = Row_Col.SAFE;
        
        int check = x[row][col];//row=6 ; col = 4
-       
+       if(check != 0)
+       {
              for (int i = 0; i < 9 ; i++) //for Row
                 {
-                    if (check == x[row][i] && i!=col) 
+                    if (check == x[row][i] && i!=col ) 
                     {
+                        System.out.println("isSafe: row" + row + " " + i);
                         ans = Row_Col.NOT_SAFE;
+                        break;
                     }
                 }
              for (int i = 0; i < 9 ; i++) //for Column
                 {
                     if (check == x[i][col] && i!=row) 
                     {
+                        System.out.println("isSafe: col" +  + col + " " + i);
                         ans = Row_Col.NOT_SAFE;
+                        break;
                     }
                 }
-            
+       }
         return ans;
     }
    
@@ -87,27 +93,35 @@ public class SudokuSolver
    
 Status verify(int x[][])
 {
-    Status ans = Status.INVALID;
-    Row_Col rc = Row_Col.NOT_SAFE;
-    
-    for (int row = 0; row < 9; row++) 
-    {
-        for (int col = 0; col < 9; col++) 
+    Status ans = Status.VALID;
+    Row_Col rc = Row_Col.SAFE;
+        if (x != null) 
         {
-            if (x != null) 
+            for (int row = 0; row < 9; row++) 
             {
-                rc = isSafe(x, row, col);
-                if (rc == Row_Col.SAFE) 
+                for (int col = 0; col < 9; col++) 
                 {
-                    ans = verify_3x3Matrix(x, row, col);
+                    rc = isSafe(x, row, col); //
+                        if (rc == Row_Col.SAFE) 
+                        {
+                            System.out.println("kya");
+                            ans = verify_3x3Matrix(x, row, col);
+                        } 
+                        else 
+                        {
+                            System.out.println("helo");
+                            ans = Status.INVALID;
+                            break;
+                        }
                 }
+                if(ans == Status.INVALID)
+                    break;
             }
-
+            return ans;
         }
+
+        return null;
     }
- 
-    return ans;
-}
 
 void solvePuzzle(int puzz[][])
 {
@@ -146,7 +160,7 @@ void solvePuzzle(int puzz[][])
                        {0,0,0,   0,8,0,   4,0,0},
                        {0,0,0,   0,1,0,   0,0,0},
                        
-                       {4,0,0,   6,0,3,   0,7,0},
+                       {0,0,0,   6,0,3,   0,7,0},
                        {5,0,0,   2,0,0,   0,0,0},
                        {1,0,4,   0,0,0,   0,0,0},
                       };
