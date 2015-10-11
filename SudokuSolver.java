@@ -70,6 +70,9 @@ public class SudokuSolver
    {
        int check = x[row][col];//row = 6 ; col = 4
        
+       if(check == 0)
+           return Status.VALID;
+       
        int base_row = 3 * (row / 3);// 3 * ( 6 / 3 ) = 3 * 2 = 6
        int base_col = 3 * (col / 3);// 3 * ( 4 / 3 ) = 3 * 1 = 3
        for(int i = 0; i < 3; ++i)
@@ -104,12 +107,18 @@ Status verify(int x[][])
                     rc = isSafe(x, row, col); //
                         if (rc == Row_Col.SAFE) 
                         {
-                            System.out.println("kya");
+                            //System.out.println("kya");
                             ans = verify_3x3Matrix(x, row, col);
+                            if(ans == Status.INVALID)
+                            {
+                                System.out.println("This : " + row + " " + col);
+                                break;
+                            }
                         } 
                         else 
                         {
-                            System.out.println("helo");
+                            //System.out.println("helo");
+                            //System.out.println("This : " + row + " " + col);
                             ans = Status.INVALID;
                             break;
                         }
@@ -156,7 +165,7 @@ void solvePuzzle(int puzz[][])
                        {0,3,0,   0,0,0,   0,0,0}, 
                        {0,0,0,   7,0,0,   0,0,0},
                        
-                       {0,2,0,   0,0,0,   0,6,0},
+                       {0,2,0,   9,0,0,   0,6,0},
                        {0,0,0,   0,8,0,   4,0,0},
                        {0,0,0,   0,1,0,   0,0,0},
                        
