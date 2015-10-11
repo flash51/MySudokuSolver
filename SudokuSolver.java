@@ -1,4 +1,4 @@
-package Practice;
+package Practice.SudokuProject;
 
 import java.io.*;
 
@@ -22,7 +22,7 @@ public class SudokuSolver
 
    Row_Col isSafe(int x[][], int row, int col)//If value of x[row][col] is not existing in full row and col then SAFE
    {
-       Row_Col ans= Row_Col.SAFE;
+       Row_Col ans = Row_Col.SAFE;
        
        int check = x[row][col];//row=6 ; col = 4
        
@@ -67,64 +67,7 @@ public class SudokuSolver
        return Status.VALID;
    }
    
-   Status verify_3x3Matrix2(int x[][], int row, int col)
-   {
-       Status ans = Status.VALID;
-       int start_row =0, end_row = 0;
-       int start_col=0, end_col = 0;
-       
-       int check = x[row][col];
-       for (int i = 0; i < row; i++)//For Row 
-       {
-           if(i<=2 && i==row)
-           {
-               start_row = 0;
-               end_row = 2;
-           }
-           else if(i>2 && i<=5 && i==row)
-               {
-                 start_row = 3;
-                 end_row = 5;
-               }
-           else if(i>5 && i<=8 && i==row)
-               {
-                 start_row = 5;
-                 end_row = 8;
-               }
-       }
-       for(int i = 0 ;i < col; i++) //For Column
-       {
-           if(i <= 2 && i== col)
-           {
-               start_col = 0;
-               end_col = 2;
-           }
-           else if(i > 2 && i <= 5 && i==row)
-               {
-                 start_col = 3;
-                 end_col = 5;
-               }
-           else if(i > 5 && i <= 8 && i==row)
-               {
-                 start_col = 6;
-                 end_col = 8;
-               }
-        }
-       
-       for(int r = start_row; r <= end_row; r++)//for verifying
-       {
-           for(int c=start_col; c<= end_col; c++)
-           {
-                  if(x[r][c]==check && x[r][c]!=x[row][col])
-                  {
-                      ans = Status.INVALID;
-                  }
-           }
-           
-       }
-       
-       return ans;
-   }
+   
    
 Status verify(int x[][] , int row, int col)
 {
