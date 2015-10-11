@@ -9,16 +9,32 @@ public class SudokuSolver
     
    int puzzle[][]={}; 
    
-   int data[]={1,2,3,4,5,6,7,8,9};
+   int data[];  
 
    SudokuSolver() //Default constructor
-   {} 
+   {
+       System.out.println("Default called.");
+        data = new int[9];//
+        for(int i=0;i < 9;i++)
+        {
+            data[i]=i+1;
+            //System.out.print(data[i]+" ");
+        }
+        System.out.println("");
+       MySet all = new MySet(data);
+   } 
    
    SudokuSolver(int p[][]) //parameterize constructor
-{
+{    
+    this();
+    System.out.println("Parametrized called.");
+    
     puzzle = new int[9][9]; //memory allocation
     puzzle = p;
+    for(int i=0;i < 9;i++)
+    System.out.println(data[i]);
 }
+  
 
    Row_Col isSafe(int x[][], int row, int col)//If value of x[row][col] is not existing in full row and col then SAFE
    {
@@ -69,19 +85,27 @@ public class SudokuSolver
    
    
    
-Status verify(int x[][] , int row, int col)
+Status verify(int x[][])
 {
     Status ans = Status.INVALID;
     Row_Col rc = Row_Col.NOT_SAFE;
-    if(x!= null)
+    
+    for (int row = 0; row < 9; row++) 
     {
-        rc = isSafe(x, row, col);
-        if(rc==Row_Col.SAFE)
+        for (int col = 0; col < 9; col++) 
         {
-            ans = verify_3x3Matrix(x, row, col);
+            if (x != null) 
+            {
+                rc = isSafe(x, row, col);
+                if (rc == Row_Col.SAFE) 
+                {
+                    ans = verify_3x3Matrix(x, row, col);
+                }
+            }
+
         }
     }
-    
+ 
     return ans;
 }
 
@@ -122,12 +146,18 @@ void solvePuzzle(int puzz[][])
                        {0,0,0,   0,8,0,   4,0,0},
                        {0,0,0,   0,1,0,   0,0,0},
                        
-                       {0,0,0,   6,0,3,   0,7,0},
+                       {4,0,0,   6,0,3,   0,7,0},
                        {5,0,0,   2,0,0,   0,0,0},
                        {1,0,4,   0,0,0,   0,0,0},
                       };
+      System.out.println("Making s1 ...");
+      SudokuSolver s1= new SudokuSolver();
+      System.out.println("Making s ...");
       SudokuSolver s= new SudokuSolver(data);
+      
+      
       s.printPuzzle();
-    
+      Status ans = s.verify(data);
+        System.out.println("Status :"+ans);
 }
 }
