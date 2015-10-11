@@ -99,7 +99,7 @@ public class Sudoku_Loader
         
         Sudoku_Loader s = new Sudoku_Loader();
         s.getSudoku(b);
-      // s.printAllPuzzles();
+      // s.printAllPuzzles(); //to print all puzzles
         s.getPuzzle(AllPuzzles,0);
         s.printPuzzle();
         
