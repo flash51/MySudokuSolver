@@ -19,23 +19,6 @@ public class MySet
         
     }
     
-    /*MySet makeSet(int ls[])
-     {
-       
-     int count[] = new int[100];
-     for(int i = 0; i < ls.length; i++) //By Hashtable
-     {
-     int index = ls[i];
-     if(count[index]== 0)
-     {
-     count[index]++;
-     }
-     }
-     data = new int[count.length];
-        
-     return null;
-     }*/
-    
     void print()
     {
        for(int i=0;i < data.length;i++)
