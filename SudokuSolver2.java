@@ -10,11 +10,12 @@ public class SudokuSolver2
     
    int puzzle[][]={}; 
    
-   int data[];  
+   int data[];
+   MySet all;
 
    SudokuSolver2() //Default constructor
    {
-       System.out.println("Default called.");
+       //System.out.println("Default called.");
         data = new int[9];//
         for(int i=0;i < 9;i++)
         {
@@ -22,21 +23,79 @@ public class SudokuSolver2
             //System.out.print(data[i]+" ");
         }
         System.out.println("");
-       MySet all = new MySet(data);
+        all = new MySet(data);
    } 
    
    SudokuSolver2(int p[][]) //parameterize constructor
 {    
     this();
-    System.out.println("Parametrized called.");
+    //System.out.println("Parametrized called.");
     
     puzzle = new int[9][9]; //memory allocation
     puzzle = p;
-    for(int i=0;i < 9;i++)
+    /*for(int i=0;i < 9;i++)
     System.out.print(data[i]+" ");
-    System.out.println("\n");
+    System.out.println("\n");*/
 }
-  
+   
+   MySet box(int x[][], int row, int col)
+   {
+       int set[] = new int[9];
+       int count = 0;
+          int base_row = 3 * (row /3);
+          int base_col = 3 * (col/3);
+          for(int i = 0; i < 3; i++)
+          {
+              int row1 = base_row + i;
+              for(int j = 0; j < 3; j++)
+              {
+                  int col1 = base_col+j;
+                  if(x[row1][col1] != 0)
+                  {
+                      set[count]=x[row1][col1];
+                      count++;
+                  }
+              }
+          }
+          MySet ans = new MySet(set);
+        return ans;
+   }
+   
+  void makeSet(int x[][])
+  {
+      MySet row[] = new MySet[9];
+      MySet col[] = new MySet[9];
+      MySet boxes[] = new MySet[9];
+      for(int i=0;i<9;i++)
+      {
+          row[i]= new MySet(x[i]);
+          for(int j=0;j<9;j++)
+          {
+              if(col[i] == null)
+                  col[i] = new MySet();
+              col[i].add(x[i][j]);
+          }
+          int r1 = 3 * (i/3);
+          int c1 = 3 * (i%3);
+          boxes[i]= box(x,r1,c1);
+      }
+      MySet poss [][]= new MySet[9][];
+      for(int i = 0 ;i < 9; i++)
+      {
+          poss[i] = new MySet[9];
+          for(int j = 0; j< 9; j++)
+          {
+              if(x[i][j] == 0)
+              {
+                int pos = 3 * (i / 3) + (j / 3);
+                poss[i][j]= all.difference(row[i]).difference(col[i]).difference(boxes[pos]);
+                  System.out.println("x[" + i + "][" + j + "]");
+                  poss[i][j].print();
+              }
+          }
+      }
+          
+  }
 
    Row_Col isSafe(int x[][], int row, int col)//If value of x[row][col] is not existing in full row and col then SAFE
    {
@@ -166,12 +225,12 @@ void solvePuzzle(int puzz[][])
                        {5,0,0,   2,0,0,   0,0,0},
                        {1,0,4,   0,0,0,   0,0,0},
                       };
-      System.out.println("Making s1 ...");
+     // System.out.println("Making s1 ...");
       SudokuSolver2 s1= new SudokuSolver2();
-      System.out.println("Making s ...");
+     // System.out.println("Making s ...");
       SudokuSolver2 s= new SudokuSolver2(data);
       
-      
+      s.makeSet(data);
       s.printPuzzle();
       Status ans = s.verify(data);
         System.out.println("Status :"+ans);

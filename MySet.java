@@ -19,6 +19,10 @@ public class MySet
         
     }
     
+    void add(int x)
+    {
+        data[x]=1;
+    }
     void print()
     {
        for(int i=0;i < data.length;i++)
