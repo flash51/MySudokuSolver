@@ -8,6 +8,7 @@ public class SudokuSolver
     enum Row_Col{SAFE, NOT_SAFE};
     
    int puzzle[][]={}; 
+   MySet poss[][]; //Possible numbers for every position in sudoku
    int data[];  
    MySet all;
    
@@ -21,7 +22,7 @@ public class SudokuSolver
             //System.out.print(data[i]+" ");
         }
         System.out.println("");
-      all = new MySet(data); //Set of All Numbers used to fill Sudoku
+      all = new MySet(data); //Set of All Numbers used to fill Sudoku(1,2,3,4,5,6,7,8,9)
    } 
    
    SudokuSolver(int p[][]) //parameterize constructor
@@ -35,6 +36,7 @@ public class SudokuSolver
     System.out.print(data[i]+" ");
       System.out.println("\n"); */
 }
+   
    MySet box(int x[][], int row, int col)
    {
        int set[] = new int[9];
@@ -44,7 +46,7 @@ public class SudokuSolver
        for(int i = 0; i < 3; ++i)
        {
            int row1 = base_row + i;
-           for(int j=0; j<3; ++j)               
+           for(int j = 0; j < 3; ++j)               
            {
                int col1 = base_col + j;
                if(x[row1][col1]!= 0)
@@ -74,12 +76,12 @@ public class SudokuSolver
                cols[j].add(x[i][j]);
            }
            
-           int r1 = 3 * (i / 3); // 3 *(0/3)
-           int c1 = 3 * (i % 3);
+           int r1 = 3 * (i / 3); //3 *(1/3)= 0
+           int c1 = 3 * (i % 3); //3 *(1%3)= 3
            boxes[i] = box(x,r1,c1);
         }
        
-       MySet poss[][] = new MySet[9][];
+        poss = new MySet[9][];
        for(int i=0 ; i < 9; ++i)
        {
            poss[i] = new MySet[9];
@@ -90,14 +92,48 @@ public class SudokuSolver
                    int pos = 3 * (i / 3) + (j / 3);
 
                    poss[i][j] = all.difference(rows[i]).difference(cols[j]).difference(boxes[pos]);
-                   System.out.println("x[" + i + "][" + j + "]");
-                   poss[i][j].print();
+//                   System.out.println("x[" + i + "][" + j + "]");
+//                   poss[i][j].print();
                }
            }
        }
-       System.out.println("Boxes Length : "+boxes.length);
+       
    }
    
+   
+void solvePuzzle()
+{
+    int ans[][] = puzzle;
+    int d[];
+    int flag;
+    int s = 0;
+    
+        do {
+             flag = 0;
+            
+            for (int i = 0; i < 9; i++) {
+                for (int j = 0; j < 9; j++) {
+                    if (puzzle[i][j] == 0) {
+                         s = poss[i][j].size();
+                        //System.out.print(s + " ");
+                        if (s == 1) {
+                            flag = 1;
+                            d = new int[0];
+                            d = poss[i][j].getElements();
+                            puzzle[i][j] = d[0];
+                             makeSet(ans);
+                        }
+                      
+                    }
+
+                }
+            }
+            
+        }
+        
+        while( flag == 1);
+        
+    }
   
    Row_Col isSafe(int x[][], int row, int col)//If value of x[row][col] is not existing in full row and col then SAFE
    {
@@ -195,13 +231,6 @@ Status verify(int x[][])
         return null;
     }
 
-void solvePuzzle(int puzz[][])
-{
-    int temp[][] = puzz;
-    
-    
-    
-}
 
    void printPuzzle()
    {
@@ -224,17 +253,17 @@ void solvePuzzle(int puzz[][])
     public static void main(String[] args) 
     {
       int data[][]={
-                       {4,0,0,   0,0,0,   8,0,5},
-                       {0,3,0,   0,0,0,   0,0,0}, 
-                       {0,0,0,   7,0,0,   0,0,0},
+                       {8,4,0,   0,3,9,   1,0,0},
+                       {3,6,0,   1,0,0,   0,0,8}, 
+                       {1,0,9,   2,0,0,   0,0,0},
                        
-                       {0,2,0,   9,0,0,   0,6,0},
-                       {0,0,0,   0,8,0,   4,0,0},
-                       {0,0,0,   0,1,0,   0,0,0},
+                       {0,5,0,   8,0,0,   6,0,0},
+                       {0,0,1,   9,0,5,   8,0,0},
+                       {0,0,3,   0,0,4,   0,2,0},
                        
-                       {0,0,0,   6,0,3,   0,7,0},
-                       {5,0,0,   2,0,0,   0,0,0},
-                       {1,0,4,   0,0,0,   0,0,0},
+                       {0,0,0,   0,0,1,   7,0,2},
+                       {2,0,0,   0,0,6,   0,8,1},
+                       {0,0,6,   3,8,0,   0,5,4},
                       };
       //System.out.println("Making s1 ...");
       SudokuSolver s1= new SudokuSolver();
@@ -242,8 +271,9 @@ void solvePuzzle(int puzz[][])
       SudokuSolver s= new SudokuSolver(data);
       
       s.makeSet(data);
+      s.solvePuzzle();
       s.printPuzzle();
-      Status ans = s.verify(data);
-        System.out.println("Status :"+ans);
+     // Status ans = s.verify(data);
+       // System.out.println("Status :"+ans);
 }
 }

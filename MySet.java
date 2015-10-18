@@ -78,7 +78,7 @@ public class MySet
     int size()
     {
         int count=0;
-        for(int i=0;i<data.length;i++)
+        for(int i=0; i < data.length; i++)
         {
             if(data[i]!=0)
                 count++;
