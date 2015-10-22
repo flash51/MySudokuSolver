@@ -144,7 +144,7 @@ public class SudokuSolver
                 if(ans != null)
                 {
                     if(verify(ans) == Status.VALID)
-                    //return ans;
+                    return ans;
                 }
              }
            }
@@ -156,7 +156,7 @@ public class SudokuSolver
    
 int[][] solvePuzzle(int puzz[][])
 {
-    int ans[][] = puzz;
+   int ans[][] = puzz;
     int d[];
     int flag;
     int s ;
@@ -183,7 +183,6 @@ int[][] solvePuzzle(int puzz[][])
             }
             
         }while( flag == 1);
-        
         
         //Now if any position is not filled (if 0)
              ans = getSudokuSolved(ans, 0, 0);
