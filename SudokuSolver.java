@@ -124,8 +124,22 @@ public class SudokuSolver
    
    int[][] getSudokuSolved(int a[][],int row, int col)
    {
-          if(a[row][col] == 0)
-           {
+          
+          if(verify(a) == Status.VALID)
+          {
+              for(int i=0;i<9;i++)
+              {
+                  for(int j=0;j<9;j++)
+                  {
+                      if(a[i][j]== 0)
+                      {
+                          break;
+                      }
+                  }
+              }
+          }
+          else
+          {
              MySet set = getNewPoss(a, row, col);
              int rem_elems[] = set.getElements();
              int new_ans[][] = copy(a);
