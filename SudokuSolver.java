@@ -127,16 +127,6 @@ public class SudokuSolver
           
           if(verify(a) == Status.VALID)
           {
-              for(int i=0;i<9;i++)
-              {
-                  for(int j=0;j<9;j++)
-                  {
-                      if(a[i][j]== 0)
-                      {
-                          break;
-                      }
-                  }
-              }
           }
           else
           {
