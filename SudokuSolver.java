@@ -7,7 +7,7 @@ public class SudokuSolver
     enum Status {VALID,INVALID};
     enum Row_Col{SAFE, NOT_SAFE};
     
-   int puzzle[][]={}; 
+  //int puzzle[][];
    MySet poss[][]; //Possible numbers for every position in sudoku
    int data[];  
    MySet all;
@@ -30,8 +30,8 @@ public class SudokuSolver
     this();
     //System.out.println("Parametrized called.");
     
-    puzzle = new int[9][9]; //memory allocation
-    puzzle = p;
+    //puzzle = new int[9][9]; //memory allocation
+    //puzzle = p;
  /* for(int i=0;i < 9;i++) // To see Data elements
     System.out.print(data[i]+" ");
       System.out.println("\n"); */
@@ -100,27 +100,80 @@ public class SudokuSolver
        
    }
    
+   MySet getNewPoss(int a[][], int row, int col)
+   {
+       MySet set = new MySet();
+       MySet r = new MySet();
+       MySet c = new MySet();
+       MySet b = new MySet();
+       
+       r = new MySet(a[row]);
+      
+      for(int j = 0; j < 9; j++)
+      {
+          c.add(a[j][col]);
+      }
+           int r1 = 3 * (row / 3); //3 * (1 / 3)= 0
+           int c1 = 3 * (col % 3); //3 * (1 % 3)= 3
+           b = box( a,r1,c1);
+       
+           set = r.difference(c).difference(b);
+      
+       return set;
+   }
    
-void solvePuzzle()
+   int[][] getSudokuSolved(int a[][],int row, int col)
+   {
+          if(a[row][col] == 0)
+           {
+             MySet set = getNewPoss(a, row, col);
+             int rem_elems[] = set.getElements();
+             int new_ans[][] = copy(a);
+             
+             int new_col = (col + 1) % 9;
+             int new_row = row + (col+1) / 9;
+             
+             for(int i = 0 ; i < rem_elems.length;i++)
+             {
+                new_ans[row][col] = rem_elems[i];
+                
+                MySet new_set = set.copy();
+                new_set.delete(rem_elems[i]);
+                
+                int ans[][] = getSudokuSolved(a, row, col);
+                if(ans != null)
+                {
+                    if(verify(ans) == Status.VALID)
+                    //return ans;
+                }
+             }
+           }
+       
+        
+     return null;
+   }
+   
+   
+int[][] solvePuzzle(int puzz[][])
 {
-    int ans[][] = puzzle;
+    int ans[][] = puzz;
     int d[];
     int flag;
-    int s = 0;
+    int s ;
     
         do {
              flag = 0;
-            
+               s = 0;  
             for (int i = 0; i < 9; i++) {
                 for (int j = 0; j < 9; j++) {
-                    if (puzzle[i][j] == 0) {
+                    if (ans[i][j] == 0) {
                          s = poss[i][j].size();
                         //System.out.print(s + " ");
                         if (s == 1) {
                             flag = 1;
                             d = new int[0];
                             d = poss[i][j].getElements();
-                            puzzle[i][j] = d[0];
+                            ans[i][j] = d[0];
                              makeSet(ans);
                         }
                       
@@ -129,10 +182,15 @@ void solvePuzzle()
                 }
             }
             
-        }
+        }while( flag == 1);
         
-        while( flag == 1);
         
+        //Now if any position is not filled (if 0)
+             ans = getSudokuSolved(ans, 0, 0);
+         
+ 
+                
+       return ans; 
     }
   
    Row_Col isSafe(int x[][], int row, int col)//If value of x[row][col] is not existing in full row and col then SAFE
@@ -232,7 +290,7 @@ Status verify(int x[][])
     }
 
 
-   void printPuzzle()
+   void printPuzzle(int a[][])
    {
        for (int i = 0; i < 9; i++) 
         {
@@ -240,7 +298,7 @@ Status verify(int x[][])
             {
                     if(j==0)
                     System.out.print("|");
-                    System.out.print( puzzle[i][j]);
+                    System.out.print( a[i][j]);
                     if(j==2 || j==5 || j==8)
                     System.out.print("|");
             }
@@ -250,29 +308,45 @@ Status verify(int x[][])
         }
    }
 
+   int[][] copy(int arr[][]) //to make a copy of original puzzle
+   {
+       int c[][] = new int[9][];
+       for(int i = 0; i < 9; i++)
+       {
+           c[i] = new int[9];
+           for(int j = 0; j < 9; j++)
+           {
+               c[i][j]= arr[i][j];
+           }
+       }
+       return c;
+   }
     public static void main(String[] args) 
     {
       int data[][]={
-                       {8,4,0,   0,3,9,   1,0,0},
-                       {3,6,0,   1,0,0,   0,0,8}, 
-                       {1,0,9,   2,0,0,   0,0,0},
+                       {1,0,6,   0,0,5,   3,8,7},
+                       {0,0,5,   0,3,2,   1,0,9}, 
+                       {3,0,0,   1,0,8,   0,0,0},
                        
-                       {0,5,0,   8,0,0,   6,0,0},
-                       {0,0,1,   9,0,5,   8,0,0},
-                       {0,0,3,   0,0,4,   0,2,0},
+                       {0,0,0,   0,0,0,   7,3,5},
+                       {0,5,3,   0,0,0,   2,1,0},
+                       {2,1,7,   0,0,0,   0,0,0},
                        
-                       {0,0,0,   0,0,1,   7,0,2},
-                       {2,0,0,   0,0,6,   0,8,1},
-                       {0,0,6,   3,8,0,   0,5,4},
+                       {0,0,0,   8,0,4,   0,0,1},
+                       {5,0,1,   3,2,0,   4,0,0},
+                       {7,8,4,   6,0,0,   9,0,3},
                       };
       //System.out.println("Making s1 ...");
-      SudokuSolver s1= new SudokuSolver();
+      SudokuSolver s= new SudokuSolver();
       //System.out.println("Making s ...");
-      SudokuSolver s= new SudokuSolver(data);
+      //SudokuSolver s1= new SudokuSolver(data);
       
       s.makeSet(data);
-      s.solvePuzzle();
-      s.printPuzzle();
+      //s.printPuzzle(data);
+      int ans[][]= s.copy(data);
+      s.solvePuzzle(ans);
+      //s.printPuzzle(data);
+      s.printPuzzle(ans);
      // Status ans = s.verify(data);
        // System.out.println("Status :"+ans);
 }
