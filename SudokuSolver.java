@@ -101,57 +101,79 @@ public class SudokuSolver
    }
    
    MySet getNewPoss(int a[][], int row, int col)
-   {
-       MySet set = new MySet();
+   {      
        MySet r = new MySet();
        MySet c = new MySet();
        MySet b = new MySet();
        
-       r = new MySet(a[row]);
+       r = new MySet(a[row]); //getting row elements
       
       for(int j = 0; j < 9; j++)
       {
-          c.add(a[j][col]);
+          c.add(a[j][col]); //getting column elements
       }
            int r1 = 3 * (row / 3); //3 * (1 / 3)= 0
            int c1 = 3 * (col % 3); //3 * (1 % 3)= 3
            b = box( a,r1,c1);
        
-           set = r.difference(c).difference(b);
+            MySet set = all.difference(r).difference(c).difference(b);
       
        return set;
    }
    
    int[][] getSudokuSolved(int a[][],int row, int col)
    {
-          
-          if(verify(a) == Status.VALID)
-          {
-          }
-          else
-          {
-             MySet set = getNewPoss(a, row, col);
-             int rem_elems[] = set.getElements();
-             int new_ans[][] = copy(a);
-             
-             int new_col = (col + 1) % 9;
-             int new_row = row + (col+1) / 9;
-             
-             for(int i = 0 ; i < rem_elems.length;i++)
-             {
-                new_ans[row][col] = rem_elems[i];
-                
-                MySet new_set = set.copy();
-                new_set.delete(rem_elems[i]);
-                
-                int ans[][] = getSudokuSolved(a, row, col);
-                if(ans != null)
-                {
-                    if(verify(ans) == Status.VALID)
-                    return ans;
-                }
+       //find first element in sudoku with zero element; start searching from (row, col)
+      //if it is zero make new set of elements and put into that position and try next till all tried 
+      
+       while(row >= 9 || a[row][col] != 0)
+       {
+           //compute next valid position
+           col = (col + 1) % 9;
+           row = row + (col + 1) / 9;
+       }
+       
+       System.out.println("(" + row + "," + col + ")");
+       if(row >= 9)
+       {
+           //verify
+           if (verify(a) == Status.VALID)
+               return a;
+       }
+       else
+       {
+           MySet set = getNewPoss(a, row, col);
+           int rem_elems[] = set.getElements();
+
+           if (set.size() == 0) 
+           {
+               System.out.println("set is null: "  + "(" + row + "," + col + ")");
+               return null;
+           } 
+           else 
+           {
+               int new_ans[][] = copy(a);
+
+               int new_col = (col + 1) % 9;
+               int new_row = row + (col + 1) / 9;
+
+               for (int i = 0; i < rem_elems.length; i++) {
+                   System.out.println("(" + row + "," + col + ") <- " + rem_elems[i]);
+                   new_ans[row][col] = rem_elems[i];
+
+                   MySet new_set = set.copy();
+                   new_set.delete(rem_elems[i]);
+
+                   int ans[][] = getSudokuSolved(new_ans, new_row, new_col);
+                   if (ans != null) {
+                       if (verify(ans) == Status.VALID) {
+                           return ans;
+                       }
+                   }
              }
            }
+           
+       }      
        
         
      return null;
@@ -189,7 +211,7 @@ int[][] solvePuzzle(int puzz[][])
         }while( flag == 1);
         
         //Now if any position is not filled (if 0)
-             ans = getSudokuSolved(ans, 0, 0);
+       ans = getSudokuSolved(ans, 0, 0);
          
  
                 
